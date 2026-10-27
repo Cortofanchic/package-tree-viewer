@@ -5,7 +5,7 @@ else
 endif
 
 GRADLE ?= $(GRADLEW)
-GRADLE_FLAGS ?= --console=plain
+GRADLE_FLAGS ?= --console=plain --no-daemon
 
 
 PKG   ?= $(PACKAGE_NAME)
