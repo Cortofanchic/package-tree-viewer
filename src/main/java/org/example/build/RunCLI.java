@@ -1,7 +1,13 @@
 package org.example.build;
 
+import org.example.model.Dependency;
+import org.example.network.RepoFetcher;
+import org.example.parser.CargoParser;
+import static org.example.cli.CLI.*;
+
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RunCLI {
@@ -11,6 +17,26 @@ public class RunCLI {
     public static void main(String[] args) {
         parseArgs(args);
         checkStringArgs();
+        parseUrl();
+    }
+
+    private static void parseUrl(){
+        String url = stringArgs.get("--url");
+        if (url != null && !url.isEmpty()) {
+            printInfo("Analyzing repository: " + url);
+            try {
+                String toml = RepoFetcher.fetchCargoToml(url);
+                List<Dependency> deps = CargoParser.parseDirectDependencies(toml);
+                printInfo("Direct dependencies found: " + deps.size());
+                for (Dependency dep : deps) {
+                    System.out.println("/ " + dep);
+                }
+            } catch (Exception e) {
+                exitWithError("Failed to analyze repository - " + e.getMessage());
+            }
+        } else {
+            printInfo("No --url provided. Skipping dependency analysis.");
+        }
     }
 
     private static void parseArgs(String[] args){
@@ -87,10 +113,5 @@ public class RunCLI {
                 exitWithError("argument tree should be true or false");
             }
         }
-    }
-
-    private static void exitWithError(String error){
-        System.out.println("[ERROR] " + error);
-        System.exit(1);
     }
 }
