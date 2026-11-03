@@ -25,6 +25,11 @@ public class RunCLI {
         parseGraph();
     }
 
+    private static void printReversedGraph(DependencyDfs graph){
+        printClear("<<Reversed graph>>");
+        graph.getReversedGraph().printGraph();
+    }
+
     private static void parseGraph(){
         String repoPath = stringArgs.get("--repo");
         try {
@@ -38,6 +43,9 @@ public class RunCLI {
                     return;
                 }
                 DfsParser.getGraph(graph, depth, stringArgs.get("--sub"), pkg);
+
+                // temporary function for 4th part
+                printReversedGraph(graph);
             }
         } catch (Exception e) {
             printExc(e.getMessage());

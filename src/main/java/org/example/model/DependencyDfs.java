@@ -21,6 +21,20 @@ public class DependencyDfs {
         dependencies.get(name).add(dependency);
     }
 
+    public DependencyDfs getReversedGraph() {
+        DependencyDfs reversed = new DependencyDfs();
+
+        for (Map.Entry<String, List<String>> entry : dependencies.entrySet()) {
+            String from = entry.getKey();
+            reversed.creatDependency(from);
+
+            for (String to : entry.getValue()) {
+                reversed.putDependency(to, from);
+            }
+        }
+        return reversed;
+    }
+
     public void printGraph(){
         printClear("<Graph Structure>");
         for (Map.Entry<String, List<String>> entry : dependencies.entrySet()) {
