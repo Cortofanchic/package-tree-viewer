@@ -1,17 +1,31 @@
 package org.example.visual;
 
 import org.example.model.DependencyDfs;
-import guru.nidi.graphviz.model.MutableGraph;
-import static guru.nidi.graphviz.model.Factory.*;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.util.List;
 
-import static org.example.cli.CLI.*;
-
+/**
+ * Утилитарный класс для экспорта графа зависимостей на языке описания диаграмм Graphviz (формат DOT).
+ * <p>
+ * Класс формирует текстовое представление графа (список ребер), которое может быть
+ * передано в утилиту Graphviz для генерации изображения (PNG, SVG и т.д.)
+ * или открыто в онлайн-редакторах (например, GraphvizOnline).
+ * Генерация текста происходит программно без использования сторонних библиотек.
+ * </p>
+ */
 public class Graphviz {
+    /**
+     * Преобразует граф зависимостей в строку в формате DOT.
+     * <p>
+     * Метод проходит по всем узлам графа и формирует описание направленного графа
+     * ({@code digraph}). Для каждого пакета создаются направленные ребра
+     * вида {@code "Пакет1" -> "Пакет2"}. Узлы без зависимостей выводятся как
+     * изолированные вершины. Для улучшения читаемости установлены настройки
+     * шрифтов и формы узлов.
+     * </p>
+     *
+     * @param graph Граф зависимостей, который необходимо экспортировать.
+     * @return Строка, содержащая валидное описание графа на языке DOT.
+     */
     public static String exportToDot(DependencyDfs graph) {
         StringBuilder sb = new StringBuilder();
         sb.append("digraph Dependencies {\n");
