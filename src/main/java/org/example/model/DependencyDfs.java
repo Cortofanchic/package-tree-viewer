@@ -35,6 +35,10 @@ public class DependencyDfs {
         return reversed;
     }
 
+    public List<String> getAllNodes(){
+        return new ArrayList<>(dependencies.keySet());
+    }
+
     public void printGraph(){
         printClear("<Graph Structure>");
         for (Map.Entry<String, List<String>> entry : dependencies.entrySet()) {

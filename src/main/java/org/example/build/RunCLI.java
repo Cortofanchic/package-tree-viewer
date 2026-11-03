@@ -6,6 +6,8 @@ import org.example.network.RepoFetcher;
 import org.example.parser.CargoParser;
 import org.example.parser.DfsParser;
 import org.example.parser.TestRepoParser;
+import org.example.visual.AsciiTree;
+import org.example.visual.Graphviz;
 
 import static org.example.cli.CLI.*;
 
@@ -22,7 +24,27 @@ public class RunCLI {
         parseArgs(args);
         checkStringArgs();
         parseUrl();
-        parseGraph();
+        printTree();
+    }
+
+    private static void printTree(){
+        String pkg = stringArgs.get("--package");
+        String sub = stringArgs.get("--sub");
+        String repoPath = stringArgs.get("--repo");
+        boolean isTree = Boolean.parseBoolean(stringArgs.get("--tree"));
+        try {
+            DependencyDfs graph = TestRepoParser.parse(repoPath); // Для тестового режима
+            printClear("<<Graphviz DOT Representation>>");
+            printClear(Graphviz.exportToDot(graph));
+
+            if (isTree && pkg != null) {
+                AsciiTree.printTree(graph, pkg, depth, sub);
+            } else if (pkg != null) {
+                parseGraph();
+            }
+        } catch (Exception e) {
+            printExc(e.getMessage());
+        }
     }
 
     private static void printReversedGraph(DependencyDfs graph){
@@ -44,8 +66,8 @@ public class RunCLI {
                 }
                 DfsParser.getGraph(graph, depth, stringArgs.get("--sub"), pkg);
 
-                // temporary function for 4th part
-                printReversedGraph(graph);
+//                // temporary function for 4th part
+//                printReversedGraph(graph);
             }
         } catch (Exception e) {
             printExc(e.getMessage());
