@@ -1,8 +1,12 @@
 package org.example.build;
 
 import org.example.model.Dependency;
+import org.example.model.DependencyDfs;
 import org.example.network.RepoFetcher;
 import org.example.parser.CargoParser;
+import org.example.parser.DfsParser;
+import org.example.parser.TestRepoParser;
+
 import static org.example.cli.CLI.*;
 
 import java.io.File;
@@ -18,6 +22,26 @@ public class RunCLI {
         parseArgs(args);
         checkStringArgs();
         parseUrl();
+        parseGraph();
+    }
+
+    private static void parseGraph(){
+        String repoPath = stringArgs.get("--repo");
+        try {
+            if (repoPath != null && !repoPath.isEmpty()) {
+                printInfo("Loading test repository from: " + repoPath);
+                DependencyDfs graph = TestRepoParser.parse(repoPath);
+                graph.printGraph();
+                String pkg = stringArgs.get("--package");
+                if (pkg == null || pkg.isEmpty()) {
+                    printExc("--package is required to start DFS.");
+                    return;
+                }
+                DfsParser.getGraph(graph, depth, stringArgs.get("--sub"), pkg);
+            }
+        } catch (Exception e) {
+            printExc(e.getMessage());
+        }
     }
 
     private static void parseUrl(){

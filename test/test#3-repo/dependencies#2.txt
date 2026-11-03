@@ -1,0 +1,6 @@
+A -> B, C
+B -> D
+C -> D, E, G, J
+D -> A
+J -> B, K
+G ->
