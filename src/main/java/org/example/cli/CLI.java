@@ -13,4 +13,8 @@ public class CLI {
     public static void printExc(String exc){
         System.out.println("[EXCEPTION] " + exc);
     }
+
+    public static void printClear(String str){
+        System.out.println(str);
+    }
 }
